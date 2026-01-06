@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  web:
+    build: ./docker/php
+    container_name: web_engine
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/apache/vhost.conf:/etc/apache2/sites-enabled/000-default.conf
+    ports:
+      - "8000:80"
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: poetic_db
+      MYSQL_USER: poetic_user
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
